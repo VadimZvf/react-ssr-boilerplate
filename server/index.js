@@ -1,6 +1,32 @@
+const appConfig = require('../src/config').default;
 const express = require('express');
 const app = express();
 const port = 8080;
+
+function renderFullPage(html, state) {
+    return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>App</title>
+      </head>
+      <body>
+        <div id="root">${html ? html : ''}</div>
+        ${
+            // TODO: refactor
+            state
+                ? `
+        <script>
+            window.${appConfig.preloadedState} = ${JSON.stringify(state || '').replace(/</g, '\\u003c')}
+        </script>
+        `
+                : ''
+        }
+        <script src="/bundle.js"></script>
+      </body>
+    </html>
+    `;
+}
 
 if (process.env.NODE_ENV === 'development') {
     const webpack = require('webpack');
@@ -25,7 +51,14 @@ app.use(express.static('build'));
 
 const serverRender = require('../src/root-server');
 
-app.get('/*', serverRender);
+app.get('/*', async (req, res) => {
+    if (appConfig.useSSR) {
+        const { html, state } = await serverRender(req);
+        res.send(renderFullPage(html, state));
+    } else {
+        res.send(renderFullPage('', null));
+    }
+});
 
 /* eslint-disable no-console */
 app.listen(port, function(error) {

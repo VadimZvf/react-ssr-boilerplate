@@ -5,11 +5,14 @@ import 'regenerator-runtime/runtime';
 // ----
 
 import * as React from 'react';
-import { hydrate } from 'react-dom';
+import { hydrate, render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './app';
+import config from './config';
 
-hydrate(
+const mount = config.useSSR ? hydrate : render;
+
+mount(
     <BrowserRouter>
         <App />
     </BrowserRouter>,
