@@ -1,7 +1,14 @@
 const appConfig = require('../src/config').default;
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const authRouter = require('./routers/auth').default;
+const apiRouter = require('./routers/api').default;
+
 const app = express();
 const port = 8080;
+
+app.use(cookieParser());
 
 function getStateString(state) {
     return `<script>
@@ -25,14 +32,10 @@ function renderFullPage(html, state) {
     `;
 }
 
-// redirect api requests to api-server in dev mode.
-// Only for devexperience
-// In production this will do nginx
-// Be careful because it can make infinity recursive requests
-const apiServerPath = 'http://localhost:8081';
-const proxy = require('http-proxy-middleware');
+app.use('/api', apiRouter);
 
-app.use('/api', proxy({ target: apiServerPath, changeOrigin: true }));
+app.use(bodyParser.json());
+app.use('/auth', authRouter);
 
 app.use(express.static('build'));
 

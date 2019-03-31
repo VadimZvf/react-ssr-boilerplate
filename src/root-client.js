@@ -6,15 +6,16 @@ import 'regenerator-runtime/runtime';
 
 import * as React from 'react';
 import { hydrate, render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import App from './app';
 import config from './config';
+import history from './history';
 
 const mount = config.useSSR ? hydrate : render;
 
 mount(
-    <BrowserRouter>
+    <Router history={history}>
         <App />
-    </BrowserRouter>,
+    </Router>,
     document.getElementById('root')
 );

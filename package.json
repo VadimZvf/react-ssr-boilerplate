@@ -7,6 +7,7 @@
         "build": "cross-env NODE_ENV=production webpack --config ./webpack/config.prod.js --progress --colors",
         "start": "node build/server.js",
         "start:dev": "nodemon --watch build --exec node build/server.js",
+        "start:auth": "nodemon auth-api-server/index.js",
         "watch": "cross-env NODE_ENV=development webpack --watch --config webpack/config.dev.js",
         "clean": "rimraf build/*",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,9 +16,12 @@
     "license": "ISC",
     "dependencies": {
         "axios": "^0.18.0",
+        "body-parser": "^1.18.3",
         "classnames": "^2.2.6",
+        "cookie-parser": "^1.4.4",
         "core-js": "^2.6.5",
         "express": "^4.16.4",
+        "history": "^4.9.0",
         "prop-types": "^15.7.2",
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
