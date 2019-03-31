@@ -24,4 +24,4 @@ async function serverRender(req) {
     return { html, state: store.getState() };
 }
 
-module.exports = serverRender;
+export default serverRender;

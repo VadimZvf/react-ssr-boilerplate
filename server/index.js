@@ -3,6 +3,12 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+function getStateString(state) {
+    return `<script>
+                window.${appConfig.preloadedState} = ${JSON.stringify(state).replace(/</g, '\\u003c')};
+            </script>`;
+}
+
 function renderFullPage(html, state) {
     return `
     <!DOCTYPE html>
@@ -12,30 +18,11 @@ function renderFullPage(html, state) {
       </head>
       <body>
         <div id="root">${html ? html : ''}</div>
-        ${
-            // TODO: refactor
-            state
-                ? `
-        <script>
-            window.${appConfig.preloadedState} = ${JSON.stringify(state || '').replace(/</g, '\\u003c')}
-        </script>
-        `
-                : ''
-        }
+        ${state ? getStateString(state) : ''}
         <script src="/bundle.js"></script>
       </body>
     </html>
     `;
-}
-
-if (process.env.NODE_ENV === 'development') {
-    const webpack = require('webpack');
-    const config = require('../webpack/config.dev');
-    const webpackDevMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
-    const compiler = webpack(config);
-    app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-    app.use(webpackHotMiddleware(compiler));
 }
 
 // redirect api requests to api-server in dev mode.
@@ -49,14 +36,14 @@ app.use('/api', proxy({ target: apiServerPath, changeOrigin: true }));
 
 app.use(express.static('build'));
 
-const serverRender = require('../src/root-server');
+const serverRender = require('../src/root-server').default;
 
 app.get('/*', async (req, res) => {
     if (appConfig.useSSR) {
         const { html, state } = await serverRender(req);
         res.send(renderFullPage(html, state));
     } else {
-        res.send(renderFullPage('', null));
+        res.send(renderFullPage(''));
     }
 });
 

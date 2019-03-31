@@ -1,25 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 
-module.exports = {
+const baseConfig = {
     devtool: 'cheap-module-eval-source-map',
     mode: process.env.NODE_ENV,
 
-    entry: ['webpack-hot-middleware/client', path.join(__dirname, '../src/root-client.js')],
-
     output: {
         path: path.join(__dirname, '../build'),
-        filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: '/'
     },
-
-    plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.DefinePlugin({
-            'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
-        })
-    ],
 
     module: {
         rules: [
@@ -29,5 +20,42 @@ module.exports = {
                 use: 'babel-loader'
             }
         ]
+    },
+
+    plugins: [
+        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
+        })
+    ]
+};
+
+const client = {
+    ...baseConfig,
+
+    entry: path.join(__dirname, '../src/root-client.js'),
+
+    output: {
+        ...baseConfig.output,
+        filename: 'bundle.js'
     }
 };
+
+const server = {
+    ...baseConfig,
+
+    target: 'node',
+
+    entry: path.join(__dirname, '../server', 'index.js'),
+
+    output: {
+        ...baseConfig.output,
+        filename: 'server.js',
+        libraryTarget: 'commonjs2'
+    },
+
+    externals: [nodeExternals()]
+};
+
+module.exports = [client, server];
