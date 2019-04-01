@@ -12,6 +12,7 @@ router.post('/login', async (req, res) => {
         });
 
         // save tokens in client side in httpOnly cookies
+        // data can by hashed with salt
         res.cookie('user', JSON.stringify(data), { httpOnly: true });
         res.send({ redirect: '/' });
     } catch (error) {
