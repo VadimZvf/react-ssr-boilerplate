@@ -14,7 +14,15 @@ app.use(bodyParser.json());
 // this server only for example
 app.post('/login', (req, res) => {
     if (req.body.login === user.login && req.body.password === user.password) {
-        res.send(JSON.stringify({ token: 'test-token', refreshToken: 'test refresh token' }));
+        res.send({ token: 'test-token', refreshToken: 'test refresh token' });
+    } else {
+        res.sendStatus(401);
+    }
+});
+
+app.post('/refresh', (req, res) => {
+    if (req.body.login === user.login && req.body.password === user.password) {
+        res.send({ token: 'test-token', refreshToken: 'test refresh token' });
     } else {
         res.sendStatus(401);
     }

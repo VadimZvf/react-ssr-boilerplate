@@ -4,11 +4,11 @@
     "description": "",
     "main": "/server/index.js",
     "scripts": {
-        "build": "cross-env NODE_ENV=production webpack --config ./webpack/config.prod.js --progress --colors",
-        "start": "node build/server.js",
-        "start:dev": "nodemon --watch build --exec node build/server.js",
+        "build": "cross-env NODE_ENV=production webpack --progress --colors",
+        "start": "cross-env NODE_ENV=production node index.js",
+        "start:dev": "cross-env NODE_ENV=production nodemon index.js",
         "start:all": "lerna run --parallel start",
-        "watch": "cross-env NODE_ENV=development webpack --watch --config webpack/config.dev.js",
+        "watch": "cross-env NODE_ENV=development webpack --watch",
         "clean": "rimraf build/*",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -39,6 +39,7 @@
         "@babel/plugin-transform-runtime": "^7.3.4",
         "@babel/preset-env": "^7.3.4",
         "@babel/preset-react": "^7.0.0",
+        "@babel/register": "^7.4.0",
         "autoprefixer": "^9.4.10",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^8.0.5",
@@ -61,7 +62,6 @@
         "stylelint": "^9.10.1",
         "stylelint-config-standard": "^18.2.0",
         "webpack": "^4.29.6",
-        "webpack-cli": "^3.2.3",
-        "webpack-node-externals": "^1.7.2"
+        "webpack-cli": "^3.2.3"
     }
 }
