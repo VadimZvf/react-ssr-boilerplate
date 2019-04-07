@@ -5,7 +5,7 @@ module.exports = {
     devtool: process.env.NODE_ENV === 'production' ? false : 'cheap-module-eval-source-map',
     mode: process.env.NODE_ENV,
 
-    entry: path.join(__dirname, '../src/root-client.js'),
+    entry: path.join(__dirname, './src/root-client.js'),
 
     output: {
         path: path.join(__dirname, '../build'),
