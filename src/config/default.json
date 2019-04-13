@@ -1,6 +1,6 @@
 {
     "preloadedState": "__PRELOADED_STATE__",
-    "api": "/api",
+    "api": "http://localhost:8080/api",
     "authApi": "/auth",
     "useSSR": true
 }

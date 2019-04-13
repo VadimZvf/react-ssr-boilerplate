@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     devtool: process.env.NODE_ENV === 'production' ? false : 'cheap-module-eval-source-map',
@@ -8,7 +9,7 @@ module.exports = {
     entry: path.join(__dirname, './src/root-client.js'),
 
     output: {
-        path: path.join(__dirname, '../build'),
+        path: path.join(__dirname, './build'),
         filename: 'bundle.js',
         publicPath: '/'
     },
@@ -19,15 +20,31 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 use: 'babel-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            localIdentName: '[hash:8]',
+                            modules: true
+                        }
+                    },
+                    { loader: 'postcss-loader' }
+                ]
             }
         ]
     },
 
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) }
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'bundle.css'
         })
     ]
 };

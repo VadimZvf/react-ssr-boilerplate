@@ -22,6 +22,7 @@ function renderFullPage(html, state) {
     <html>
       <head>
         <title>App</title>
+        <link rel="stylesheet" href="/bundle.css">
       </head>
       <body>
         <div id="root">${html ? html : ''}</div>

@@ -3,6 +3,8 @@ import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchMessage from './actions/message-fetch';
 
+import styles from './index.css';
+
 class Main extends React.Component {
     static propTypes = {
         message: propTypes.string,
@@ -22,8 +24,8 @@ class Main extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Hello!</h1>
+            <div className={styles.wrap}>
+                <h1 className={styles.title}>Hello!</h1>
                 <p>{this.props.isPending ? 'Loading...' : this.props.message}</p>
             </div>
         );
